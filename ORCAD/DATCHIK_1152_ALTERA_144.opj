@@ -1,0 +1,108 @@
+(ExpressProject "DATCHIK_1152_ALTERA_144"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (NoModify)
+    (File ".\datchik_1152_altera_144.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x"))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (CONECTOR-M
+      (FullPartName "CONECTOR-M.Normal")
+      (LibraryName "D:\MAP\ORCAD\MOILIBR2.OLB")
+      (DeviceIndex "0"))
+    (133ËÀ3
+      (FullPartName "133ËÀ3.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (Ðàçåì
+      (FullPartName "Ðàçåì.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\MOILIBR.OLB")
+      (DeviceIndex "0"))
+    (TRANSF3
+      (FullPartName "TRANSF3.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\MOILIBR.OLB")
+      (DeviceIndex "0"))
+    (1533ËÍ1
+      (FullPartName "1533ËÍ1.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (155ËÍ1
+      (FullPartName "155ËÍ1.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (555ÈÄ7
+      (FullPartName "555ÈÄ7.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (555ÒÌ2
+      (FullPartName "555ÒÌ2.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (555ÑÏ1
+      (FullPartName "555ÑÏ1.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\RUSS.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (CONECTOR-P
+      (FullPartName "CONECTOR-P.Normal")
+      (LibraryName "D:\MAP\ORCAD\MOILIBR2.OLB")
+      (DeviceIndex "0"))
+    (NE5553-dip
+      (FullPartName "NE5553-dip.Normal")
+      (LibraryName "D:\ARXIV\MOI\KEIL\S_KAMERA\ORCAD\MOILIBR2.OLB")
+      (DeviceIndex "0"))
+    (BAT54S
+      (FullPartName "BAT54S.Normal")
+      (LibraryName "D:\MAP\ORCAD\MOILIBR2.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (ADG621
+      (FullPartName "ADG621.Normal")
+      (LibraryName "D:\MAP\ORCAD\MOILIBR2.OLB")
+      (DeviceIndex "0"))
+    (INDUCTOR
+      (FullPartName "INDUCTOR.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (AD781
+      (FullPartName "AD781.Normal")
+      (LibraryName "D:\MAP\ORCAD\LIB\MOILIBR.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory "D:\ARXIV\MOI\Keil\S_KAMERA\ORCAD")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources"
+         "D:\ARXIV\MOI\Keil\S_KAMERA\SRC\ORCAD\datchik_1152_altera_144.dsn")
+      (Path "Design Resources"
+         "D:\ARXIV\MOI\Keil\S_KAMERA\SRC\ORCAD\datchik_1152_altera_144.dsn"
+         "FEVRAL_2019")
+      (Select "Design Resources"
+         "D:\ARXIV\MOI\Keil\S_KAMERA\SRC\ORCAD\datchik_1152_altera_144.dsn"
+         "FEVRAL_2019" "mt1151-L1"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 0 912 -8 -31 1154 1642 20 907"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -1 -1 0 943 0 912")
+        (Scroll "1125 0")
+        (Zoom "100"))
+      (Path "D:\ARXIV\MOI\KEIL\S_KAMERA\SRC\ORCAD\DATCHIK_1152_ALTERA_144.DSN")
+      (Schematic "FEVRAL_2019")
+      (Page "mt1151-L1"))))

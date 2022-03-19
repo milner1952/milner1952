@@ -1,0 +1,114 @@
+(ExpressProject "тк"
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library"
+      (File "C:\Users\User\Desktop\TK\LIBRARY1.OLB"
+        (Type "Schematic Library")))
+    (NoModify)
+    (File ".\тк.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x"))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector
+    (X1
+      (FullPartName "X1.Normal")
+      (LibraryName "C:\USERS\USER\DESKTOP\TK\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    ("Вилка сетевая с кабелем"
+      (FullPartName "Вилка сетевая с кабелем.Normal")
+      (LibraryName "C:\USERS\USER\DESKTOP\TK\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    ("RQA 8025HSL"
+      (FullPartName "RQA 8025HSL.Normal")
+      (LibraryName "C:\USERS\USER\DESKTOP\TK\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    (NTC
+      (FullPartName "NTC.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (LAMP
+      (FullPartName "LAMP.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (ТРМ202-Щ2-РР
+      (FullPartName "ТРМ202-Щ2-РР.Normal")
+      (LibraryName "C:\USERS\USER\DESKTOP\TK\LIBRARY1.OLB")
+      (DeviceIndex "0"))
+    ("PLUG FEMAL"
+      (FullPartName "PLUG FEMAL.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (SWITCH
+      (FullPartName "SWITCH.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (TRIAC
+      (FullPartName "TRIAC.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    ("THYRISTOR K"
+      (FullPartName "THYRISTOR K.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (R
+      (FullPartName "R.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (DIAC
+      (FullPartName "DIAC.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (LED
+      (FullPartName "LED.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (CRYSTAL
+      (FullPartName "CRYSTAL.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (C
+      (FullPartName "C.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\DEVICE.OLB")
+      (DeviceIndex "0"))
+    (74S38
+      (FullPartName "74S38.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\TTL1.OLB")
+      (DeviceIndex "0"))
+    (74S30
+      (FullPartName "74S30.Normal")
+      (LibraryName "C:\PROGRAM FILES\ORCAD\CAPTURE\LIBRARY\IEC\TTL1.OLB")
+      (DeviceIndex "0"))
+    (K1182PM1
+      (FullPartName "K1182PM1.Normal")
+      (LibraryName "C:\USERS\USER\DESKTOP\TK\LIBRARY1.OLB")
+      (DeviceIndex "0")))
+  (LastUsedLibraryBrowseDirectory "C:\Users\User\Desktop\TK")
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" "C:\Users\User\Desktop\TK\тк.dsn")
+      (Path "Design Resources" "C:\Users\User\Desktop\TK\тк.dsn" "SCHEMATIC1")
+      (Path "Design Resources" "Library")
+      (Path "Design Resources" "Library"
+         "C:\Users\User\Desktop\TK\LIBRARY1.OLB")
+      (Select "Design Resources" "C:\Users\User\Desktop\TK\тк.dsn" "SCHEMATIC1"
+         "PAGE1"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 0 1 0 834 -4 -23 0 200 0 573"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -4 -23 132 474 132 724")
+        (Scroll "672 96")
+        (Zoom "162")
+        (Occurrence "/"))
+      (Path "C:\USERS\USER\DESKTOP\TK\ТК.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "PAGE1"))))
