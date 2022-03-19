@@ -1,0 +1,417 @@
+`timescale 1ns/10 ps 
+
+`include "../../../SRC/Quartus/VERS_1_00/Defines.v"
+
+/*
+input RES_HARD - аппаратный сброс
+input F0,F1,F2 - фазы f модуля синхронизации
+input M0,M1,M2,M3  - фазы M млдуля синхронизации
+input MTR_CLK - сигнал синхронизации матриц
+input PIC_SINXRO_RF12 - вход синфазирования начала приема строки микропроцессором PIC
+input _RUN - строб приема изображения от микропроцессора PIC
+input  _TRIG - сигнал готовности одного пикселя от матриц
+input END - сигнал матриц, об окончании вывода строк
+input CHENGE_ADRES_IN - сигнал изменения состояния шины адреса записи буферов строк
+input _RD_SXR - вывод сигнала чтения _RD модуля синхронизации 
+							
+							
+output reg INT_RESET_RE8 
+output reg _MTR_RST
+output reg COUNT_F_GO
+output reg [`D_WIDTH_OF_ADRES_IN_11 - 1  : 0]ADRES_IN  
+output _RD,output reg ADRES_IN_11
+*/
+module 	ADRES_IN_MD(input RES_HARD, input F0, input F1, input F2,
+							input M0, input M1, input M2,input  M3,  
+							input MTR_CLK, input PIC_SINXRO_RF12, input _RUN, input  _TRIG, input END,
+							input CHENGE_ADRES_IN, input _RD_SXR,
+							
+							
+							output reg INT_RESET_RE8, output reg _MTR_RST, output reg COUNT_F_GO,
+							output reg [`D_WIDTH_OF_ADRES_IN_11 - 1  : 0]ADRES_IN  , output _RD, output reg ADRES_IN_11
+							);
+		
+//flag_rdy - флаг устанавливается при получении сигнала PIC_SINXRO_RF12 по фазе М3 при	 (_RUN == 0) и (INT_RESET_RE8 == 1)
+//flag_rdy - сбрасывается по фазе М3 при MTR_CLK == 0	
+reg flag_rdy/* synthesis noprune */;		
+
+//go_counter_mtr_rst - строб разрешения работы счетчика counter_mtr_rst, отсчитывающего длительность сигнала _MTR_RST
+reg go_counter_mtr_rst;
+
+//[`D_WIDTH_OF_COUNTER_MTR_RST - 1:0]counter_mtr_rst - отсчитывает длительность сигнала _MTR_RST
+reg [`D_WIDTH_OF_COUNTER_MTR_RST - 1:0]counter_mtr_rst;	
+
+//синхронизированный (задержанный) фазой М0 сигнал TRIG
+reg shift_trig;
+
+//синхронизированный (задержанный) фазой М0 сигнал end_adres_in
+reg end_of_end_adres_in;
+
+//счетчик изменений сигналов MTR_CLK
+reg [3 : 0]count_chenge_mtr_clk;
+
+//разрешение работы счетчика [3 : 0]count_chenge_mtr_clk
+reg count_chenge_mtr_clk_go;
+reg end_adres_in;
+
+//фронт сигнала _TRIG
+wire chenge_trig;
+
+//сигнал чтения  аналоговых плат при приеме информации X-RAY
+assign _RD = _RUN == 1'h0 ?_RD_SXR | (shift_trig & (count_chenge_mtr_clk == 4'h4)) : 1'h1;
+//фронт сигнала _TRIG
+assign chenge_trig = shift_trig & ~_TRIG & (_RUN == 0) /*& (count_chenge_mtr_clk == 4'h4) */;
+
+//------------------------------------------------------------------------------------
+//По фазе М2 производится 
+//сравнение ((`D_NUM_WORD_OF_ADRES_IN_1152 - 1) == ADRES_IN 
+//по результату устанавливается флаг - end_adres_in
+//----------------------------------------------------------------------------------
+always @(posedge RES_HARD, posedge M2)
+begin
+	if(RES_HARD == 1)
+	begin
+		end_adres_in = 0;
+	end
+	else
+	begin
+	if(M2 == 1)
+		begin
+				end_adres_in = ((`D_NUM_WORD_OF_ADRES_IN_1152 - 1) == ADRES_IN );	
+		end
+	end
+end	
+//---------------------------------------------------------------------------------------
+//флаг flag_rdy по фазе M3:
+//  - устанавливается  при условии:
+// 			(PIC_SINXRO_RF12 == 1)  и (_RUN == 0)
+// - сбрасывается при условии (MTR_CLK == 0)
+//----------------------------------------------------------------------------------
+
+/*
+always @(posedge RES_HARD, posedge M3)
+begin
+	if(RES_HARD == 1)
+	begin
+		flag_rdy = 0; 
+	end
+//	else
+      if(M3 == 1)
+		begin
+				if(PIC_SINXRO_RF12 == 1) 
+				begin
+				    if(_RUN == 0)
+					 begin
+						if(INT_RESET_RE8 == 1)
+						begin
+							flag_rdy = 1;					
+						end
+					end	
+				end	
+				else
+				begin				
+			         if(MTR_CLK == 0)
+						begin
+							flag_rdy = 0; 
+						end	
+				end	
+		 end
+end
+*/
+wire w_rdy_1;
+wire w_rdy_0;
+assign w_rdy_1 = ((PIC_SINXRO_RF12 == 1) & (_RUN == 0) & (INT_RESET_RE8 == 1) & (M3 == 1));
+assign w_rdy_0 =  ((MTR_CLK == 0) & ((M3 == 1)));
+
+always @(posedge RES_HARD, posedge M3)
+begin
+	if(RES_HARD == 1)
+	begin
+		flag_rdy = 0; 
+	end
+   else
+		begin				
+				if(w_rdy_1 == 1)
+				begin
+					flag_rdy = 1;					
+				end	
+				else			
+			   if(w_rdy_0 == 1)
+				begin
+					flag_rdy = 0; 
+				end		
+		 end
+end
+
+//-----------------------------------------------------------------------------------
+//сигнал INT_RESET_RE8:
+//		- устанавливается по фазе М3 при условии ( end_of_end_adres_in == 1)
+//		- сбрасывается по фазе M1 при условии (flag_rdy == 1) и (_RUN == 0)
+//----------------------------------------------------------------------------------
+always @(posedge RES_HARD, posedge M3, posedge M1)
+begin
+	if(RES_HARD == 1)
+	begin
+		 INT_RESET_RE8 = 1;
+	end
+	else
+	
+	   if(M3 == 1)
+		begin
+				if( end_of_end_adres_in == 1)
+				begin 					
+						INT_RESET_RE8 = 1;
+				end				
+		end		
+	   else
+	   if(M1 == 1)
+      begin		
+					if(flag_rdy == 1)
+					begin
+							if(_RUN == 0)
+							begin
+								INT_RESET_RE8 = 0;  			 
+							end
+					end
+      end	
+	
+end
+//--------------------------------------------------------------------
+//сигнал go_counter_mtr_rst:
+//		- устанавливается по фазе М1 при условии (flag_rdy == 1) и (_RUN == 0) и (MTR_CLK == 0)
+//		- сбрасывается по фазе (M2 == 1) при условии (counter_mtr_rst == `D_SZ_MTR_RST)
+//счетчик counter_mtr_rst:
+//    - работает по фазе M2  
+//		- сбрасывается по фазе М2 при условии (counter_mtr_rst == `D_SZ_MTR_RST)
+//------------------------------------------------------------------------
+always @(posedge RES_HARD,posedge M1, posedge M2)
+begin
+	if(RES_HARD == 1)
+	begin
+		 go_counter_mtr_rst = 0;  counter_mtr_rst <= `D_WIDTH_OF_COUNTER_MTR_RST'h0; 		 	
+	end
+	else		
+		if((M1 == 1))
+		begin
+		         if(flag_rdy == 1)
+					begin
+							if(_RUN == 0)
+							begin
+							   if(MTR_CLK == 0)
+									go_counter_mtr_rst = 1;
+							end
+					end		
+		end
+      else
+	
+		if(M2 == 1)
+		begin
+		         if(go_counter_mtr_rst == 1)
+					begin
+					      counter_mtr_rst <= counter_mtr_rst + `D_WIDTH_OF_COUNTER_MTR_RST'h1;
+							if(counter_mtr_rst == `D_SZ_MTR_RST)
+							begin
+							counter_mtr_rst <= `D_WIDTH_OF_COUNTER_MTR_RST'h0;
+							go_counter_mtr_rst = 0;
+							end        
+					end
+		
+		end
+
+end
+
+//------------------------------------------------------
+//Сигнал _MTR_RST:
+//		- устанавливается по переднему фронту MTR_CLK
+//				при go_counter_mtr_rst == 0
+//		- сбрасывается по переднему фронту MTR_CLK
+//				при go_counter_mtr_rst == 1 
+//----------------------------------------------------------
+always @(posedge RES_HARD, posedge MTR_CLK)
+begin
+	if(RES_HARD == 1)
+	begin
+         _MTR_RST = 1;   
+	end
+	else
+	   if(MTR_CLK == 1)
+		begin
+				if(go_counter_mtr_rst == 1)
+				begin
+					_MTR_RST = 0;
+				end	
+				else
+				begin
+					_MTR_RST = 1;			  
+				end	
+		end	  
+end
+
+//------------------------------------------------------------------------------------------
+// Заденржка сигнала _TRIG на один период сигнала М0
+//----------------------------------------------------------------------------
+always @(posedge RES_HARD, negedge M0)
+begin
+	if(RES_HARD == 1)
+	begin
+		shift_trig = 0; 
+	end
+	else
+	begin
+	
+	   if(M0 == 0)
+		begin
+			shift_trig = _TRIG;
+		end
+	end
+end	
+
+
+//------------------------------------------------------------------------------------------
+//count_chenge_mtr_clk - счетчик изменений сигнала MTR_CLK
+// 	-сбрасывается сигналом (_MTR_RST == 0) или (end_adres_in == 1)
+//		-отсчитывает фронты МTR_CLK при наличии  count_chenge_mtr_clk_go == 1 до состояния 
+//				count_chenge_mtr_clk >= 4'h8
+//сигнал count_chenge_mtr_clk_g:
+//		-устанавливается по  (MTR_CLK == 0) при условии (_TRIG == 0)
+//    - сбрасывается  (_MTR_RST == 0) или (end_adres_in == 1)  
+//----------------------------------------------------------------------------
+always @(posedge RES_HARD, negedge _MTR_RST , negedge MTR_CLK,  posedge end_adres_in)
+begin
+	if(RES_HARD == 1)
+	begin
+		count_chenge_mtr_clk = 4'h0; count_chenge_mtr_clk_go = 0;
+	end
+	else
+	begin//2
+		if(_MTR_RST == 0) 
+		begin
+	   		count_chenge_mtr_clk = 4'h0; count_chenge_mtr_clk_go = 0;
+		end			
+		else
+		if(end_adres_in == 1)
+		begin
+				count_chenge_mtr_clk = 4'h0; count_chenge_mtr_clk_go = 0;
+		end			
+      else //1
+	   if(MTR_CLK == 0)
+		begin
+				if(_TRIG == 0)
+				begin		    
+				    count_chenge_mtr_clk_go = 1;
+				end
+
+				    if((count_chenge_mtr_clk < 4'h8) & (count_chenge_mtr_clk_go == 1))
+						begin
+							count_chenge_mtr_clk = count_chenge_mtr_clk + 4'h1;
+						end				
+		end //1
+			
+	end//2
+end	
+
+
+
+//------------------------------------------------------------------------------------------
+//сигнал COUNT_F_GO
+// 	- устанавливается по сигналу (chenge_trig == 1) при условии (count_chenge_mtr_clk == 4'h4)
+//		- сбрасывается по сигналу:
+//				-(_MTR_RST == 0) или 
+//				-(end_adres_in == 1) при наличии M0 == 1
+//--------------------------------------------------------------------------------------------
+always @(posedge RES_HARD, posedge chenge_trig, negedge _MTR_RST, posedge end_adres_in)
+begin
+	if(RES_HARD == 1)
+	begin
+		COUNT_F_GO = 0; 
+	end
+	
+	else
+	
+	if(_MTR_RST == 0) 
+	begin
+	   COUNT_F_GO = 0; 
+	end
+	else	
+	if(end_adres_in == 1)
+	begin
+	    if(M0 == 1)
+		 begin
+			COUNT_F_GO = 0; 
+		 end	
+	end
+	else
+	if(chenge_trig == 1 )
+	begin
+	   begin
+			if(count_chenge_mtr_clk == 4'h4) 
+			begin
+				COUNT_F_GO = 1;	
+			end	
+		end
+	end	
+	
+end
+//---------------------------------------------------------------------------
+//ADRES_IN счетчик адреса сдвоеного буфера памяти строки информации
+//	- сбрасывается в ноль при (_RUN == 1) или (COUNT_F_GO == 0) или (ADRES_IN == `D_NUM_WORD_OF_ADRES_IN_1152)
+// - считает сигналы (CHENGE_ADRES_IN == 1). В состоянии (ADRES_IN == `D_NUM_WORD_OF_ADRES_IN_1152) инвертируется 
+//сигнал ADRES_IN_11
+//----------------------------------------------------------------------------
+always @(posedge RES_HARD, posedge CHENGE_ADRES_IN, negedge COUNT_F_GO, posedge _RUN)
+begin
+	if(RES_HARD == 1)
+	begin
+		ADRES_IN = `D_WIDTH_OF_ADRES_IN_11'h0; ADRES_IN_11 = 0;
+	end
+	else
+	begin
+	   if(_RUN == 1)
+		begin
+		ADRES_IN_11 = 0;
+		end
+		else
+	   if(COUNT_F_GO == 0)
+		begin
+			ADRES_IN = `D_WIDTH_OF_ADRES_IN_11'h0; 
+	   end
+		else
+		
+		if(CHENGE_ADRES_IN == 1)
+		begin
+			ADRES_IN = ADRES_IN + `D_WIDTH_OF_ADRES_IN_11'h1; 			
+			if(ADRES_IN == `D_NUM_WORD_OF_ADRES_IN_1152)
+			begin
+`ifndef _576_pix			
+				if(ADRES_IN[10] == 1)
+`else
+				if(ADRES_IN[9] == 1)
+`endif				
+				begin
+					ADRES_IN_11 = 	~ADRES_IN_11;
+				end
+				ADRES_IN = `D_WIDTH_OF_ADRES_IN_11'h0;         				
+			end
+		end
+	end	
+end
+//------------------------------------------------------------------------------------------
+//сигнал end_of_end_adres_in - синхронизированный фазой M0 сигнал end_adres_in
+//----------------------------------------------------------------------------
+always @(posedge RES_HARD, posedge M0)
+begin
+	if(RES_HARD == 1)
+	begin
+		end_of_end_adres_in = 0; 
+	end
+	else
+	begin
+	
+	   if(M0 == 1)
+		begin
+			end_of_end_adres_in = end_adres_in;
+		end
+	end
+end
+endmodule
+
